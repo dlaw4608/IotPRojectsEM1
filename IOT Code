@@ -1,0 +1,69 @@
+import BlynkLib
+import RPi.GPIO as GPIO
+import time
+import signal
+import atexit
+
+BLYNK_AUTH = "17McbeumaK2cn8OB5oacJXpYqMUwSt_J"
+
+atexit.register(GPIO.cleanup)
+sensorpin = 23
+servopin = 17
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(servopin, GPIO.OUT, initial=False)
+GPIO.setup(sensorpin,GPIO.IN)
+GPIO.add_event_detect(sensorpin, GPIO.RISING)
+p = GPIO.PWM(servopin, 50)
+p.start(0)
+time.sleep(2)
+
+blynk = BlynkLib.Blynk(BLYNK_AUTH)
+
+def MOTION():
+    p.ChangeDutyCycle(7.5)
+    print( "Motion Detected!" )
+
+def move_sensor():
+
+       try:
+             while True:
+                         
+                          MOTION()
+                          time.sleep(0.2)
+        
+       except KeyboardInterrupt:
+               print ("Quit")
+               GPIO.cleanup()
+               exit()
+
+
+@blynk.on("V4")
+def v4_write_handler(value):
+    buttonValue=value[0]
+    print(f'Current button value: {buttonValue}')
+    p.ChangeDutyCycles(5)
+    time.sleep(0.5)
+    p.ChangeDutyCycle(0)
+    time.sleep(0.2)
+    p.ChangeDutyCycle(5)
+    time.sleep(0.5)
+    p.ChangeDutyCycle(0)
+    time.sleep(0.2)
+    p.ChangeDutyCycle(5)
+    time.sleep(0.5)
+    p.ChangeDutyCycle(0)
+    time.sleep(0.2)
+
+
+try:
+    while True:
+        if GPIO.event_detected(sensorpin):
+          MOTION()
+          time.sleep(0.2)
+        blynk.run()
+        pass
+
+except KeyboardInterrupt:
+        print ("Quit")
+        GPIO.cleanup()
+        exit()
