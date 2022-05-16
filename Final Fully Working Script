@@ -11,7 +11,7 @@ import time
 import signal
 import atexit
 
-
+//User authentication connect to Blynk account
 BLYNK_AUTH = "17McbeumaK2cn8OB5oacJXpYqMUwSt_J"
 
 //shutdown handler
@@ -38,8 +38,14 @@ blynk = BlynkLib.Blynk(BLYNK_AUTH)
 
 //A basic method which prints and turns the servo motor when motion is detected
 def MOTION():
+    p.ChangeDutyCycle(10)
+    time.sleep(1.2)
+    p.ChangeDutyCycle(5)
+    time.sleep(1)
     p.ChangeDutyCycle(7.5)
+    time.sleep(1.2)
     print( "Motion Detected!" )
+    blynk.virtual_write(2, GPIO.input(sensorpin))
 
 //A try if statement only true when motion is detected.
 def move_sensor():
