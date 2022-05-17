@@ -1,4 +1,4 @@
-# IotPRojectsEM1
+# IotPRojectsOld
 Smart dispenser project for Project semester module.
 
 The idea of my project was to create a simple protoype of a servo motor that will move at a 180.C angle through the use of a raspberry Pi and the Iot platform, Blynk. 
